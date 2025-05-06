@@ -1,0 +1,49 @@
+{
+ "app": "erpnext",
+ "charts": [],
+ "content": "[{\"id\":\"u7RnuPLfvE\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Db Management</span>\",\"col\":12}},{\"id\":\"PRmMUxITFG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import CSV\",\"col\":6}},{\"id\":\"1ND3DMNk6f\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Clear Data\",\"col\":6}}]",
+ "creation": "2025-05-01 12:27:53.066293",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "shortcut",
+ "idx": 4,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Db Management",
+ "link_type": "DocType",
+ "links": [],
+ "modified": "2025-05-01 22:47:32.834552",
+ "modified_by": "Administrator",
+ "module": "Db management",
+ "name": "Db Management",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 23.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Import CSV",
+   "link_to": "Import CSV",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Clear Data",
+   "link_to": "Clear Data",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Db Management",
+ "type": "Workspace"
+}
