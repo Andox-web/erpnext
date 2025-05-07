@@ -1,0 +1,19 @@
+{
+ "content": null,
+ "creation": "2025-05-07 02:12:41.376347",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2025-05-07 02:12:56.140193",
+ "modified_by": "Administrator",
+ "module": "Db management",
+ "name": "import-csv",
+ "owner": "Administrator",
+ "page_name": "import-csv",
+ "roles": [],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Import CSV"
+}
