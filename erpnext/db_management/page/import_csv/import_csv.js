@@ -140,38 +140,50 @@ frappe.pages['import-csv'].on_page_load = function(wrapper) {
         });
 
         Promise.all(files.map(readFile)).then(contents => {
-            frappe.call({
-                method: 'erpnext.db_management.page.import_csv.import_csv.import_all',
-                args: {
-                    item_file_content: contents[0],
-                    supplier_file_content: contents[1],
-                    quotation_file_content: contents[2]
-                },
-                callback: resp => {
-                    importBtn.disabled = false;
-                    importBtn.innerText = 'Importer';
-                    if (!resp.exc) {
-                        messageEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text-success');
-                        messageEl.innerText = resp.message;
-                    } else {
-                        messageEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text-danger');
-                        messageEl.innerText = `Erreur d'importation : ${resp.message}`;
-                    }
-                },
-                error: err => {
-                    importBtn.disabled = false;
-                    importBtn.innerText = 'Importer';
-                    messageEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text-danger');
-                    messageEl.innerText = 'Erreur lors de l\'appel au serveur.';
-                    console.error(err);
-                }
-            });
-        }).catch(err => {
-            importBtn.disabled = false;
-            importBtn.innerText = 'Importer';
-            messageEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text-danger');
-            messageEl.innerText = `Une erreur est survenue : ${err.message}`;
-            console.error(err);
-        });
+			frappe.call({
+				method: 'erpnext.db_management.page.import_csv.import_csv.import_all',
+				args: {
+					item_file_content: contents[0],
+					supplier_file_content: contents[1],
+					quotation_file_content: contents[2]
+				},
+				callback: resp => {
+					importBtn.disabled = false;
+					importBtn.innerText = 'Importer';
+					if (!resp.exc) {
+						frappe.msgprint({
+							title: __('Succès'),
+							message: resp.message,
+							indicator: 'green'
+						});
+					} else {
+						frappe.msgprint({
+							title: __('Erreur d\'importation'),
+							message: resp.message,
+							indicator: 'red'
+						});
+					}
+				},
+				error: err => {
+					importBtn.disabled = false;
+					importBtn.innerText = 'Importer';
+					frappe.msgprint({
+						title: __('Erreur'),
+						message: __('Erreur lors de l\'appel au serveur.'),
+						indicator: 'red'
+					});
+					console.error(err);
+				}
+			});
+		}).catch(err => {
+			importBtn.disabled = false;
+			importBtn.innerText = 'Importer';
+			frappe.msgprint({
+				title: __('Erreur'),
+				message: `Une erreur est survenue : ${err.message}`,
+				indicator: 'red'
+			});
+			console.error(err);
+		});
     });
 };
