@@ -35,7 +35,8 @@ def reset_all_data():
 
         # Enfin, les entités principales
         "Item",
-        "Supplier"
+        "Supplier",
+        "Warehouse"
     ]
     deleted = []
     try:

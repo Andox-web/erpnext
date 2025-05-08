@@ -17,7 +17,7 @@ def import_all(item_file_content, supplier_file_content, quotation_file_content)
         quo_headers, quo_rows = quotations_data[0], quotations_data[1:]
 
         frappe.db.begin()
-
+        create_warehouses(item_rows, item_headers)
         create_countries(sup_rows, sup_headers)
         create_suppliers(sup_rows, sup_headers)
         create_item_groups(item_rows, item_headers)
@@ -92,25 +92,51 @@ def create_items(item_rows, item_headers):
                 "is_purchase_item": 1,
                 "is_sales_item": 0,
             }).insert(ignore_permissions=True)
-            frappe.db.commit()
 
-
+def create_warehouses(item_rows, item_headers):
+    warehouses = set([row[item_headers.index('target_warehouse')] for row in item_rows])
+    company = frappe.defaults.get_user_default('Company')
+    abbr = frappe.db.get_value('Company', company, 'abbr')
+    for warehouse in warehouses:
+        if not frappe.db.exists("Warehouse", warehouse):
+            frappe.get_doc({
+                "doctype": "Warehouse",
+                "warehouse_name": warehouse,
+                "company": company,
+                "is_group": 0,
+                "parent_warehouse": None,
+                "group_or_warehouse": 1
+            }).insert(ignore_permissions=True)
+            
 def group_items_by_ref(item_rows, item_headers):
     material_data = {}
-    for row in item_rows:
+    for i,row in enumerate(item_rows):
         vals = dict(zip(item_headers, row))
         ref = vals.get('ref')
-        date = getdate(vals.get('date'))
-        required = getdate(vals.get('required_by'))
+        from datetime import datetime
+
+        date_str = vals.get('date')
+        required_str = vals.get('required_by')
+
+        # ⚠️ Précise le format: jour/mois/année
+        date = datetime.strptime(date_str, '%d/%m/%Y').date()
+        required = datetime.strptime(required_str, '%d/%m/%Y').date()
+        # ✅ Ajout de validation de date
+        if required < date:
+            frappe.throw(_(f"Ligne #{i+1} (ref {ref}): 'Required By' ({required})({required_str}) ne peut pas précéder la date de transaction ({date})({date_str})."))
+
         purpose = vals.get('purpose')
         company = frappe.defaults.get_user_default('Company')
         abbr = frappe.db.get_value('Company', company, 'abbr')
         warehouse = vals.get('target_warehouse') or 'Stores'
         wh = f"{warehouse} - {abbr}"
 
+        quantity = float(vals.get('quantity') or 0)
+        if quantity < 0:
+            frappe.throw(_(f"Quantité invalide !{row}"))
         item_entry = {
             'item_code': vals.get('item_name'),
-            'qty': float(vals.get('quantity') or 0),
+            'qty': quantity,
             'warehouse': wh,
             'schedule_date': required
         }
@@ -198,3 +224,5 @@ def create_rfq_and_quotations(quo_rows, quo_headers, material_requests):
                 'items': sq_items
             })
             sq.insert()
+        else:
+            frappe.throw(_(f"Material Request not found for reference: {ref}"))
