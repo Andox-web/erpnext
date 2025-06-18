@@ -36,7 +36,17 @@ def reset_all_data():
         # Enfin, les entités principales
         "Item",
         "Supplier",
-        "Warehouse"
+        "Warehouse",
+        
+        # Supprimer d'abord les documents dépendants
+        "Salary Slip",
+        "Salary Structure Assignment",
+        "Salary Structure",
+        "Salary Component",
+        "Salary Detail",            
+    	"Department",                
+        "Designation",               
+        "Employee"
     ]
     deleted = []
     try:
